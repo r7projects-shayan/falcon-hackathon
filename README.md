@@ -29,8 +29,9 @@ A system leveraging AI for remote healthcare, including features for AI chatbot 
     ```
 
 3. Setup environment variables:
-4. ```bash
-cp .env.example .env
+    ```bash
+    cp .env.example .env
+    ```
 
 ### Running the Backend
 
@@ -56,7 +57,7 @@ cp .env.example .env
     ```bash
     streamlit run home.py
     ```
-    
+
 ## Basic Chat Functionality
 
 This project now includes basic chat functionality using the AI71 platform. This feature allows users to interact with an AI chatbot for various purposes, such as answering questions or providing assistance.
