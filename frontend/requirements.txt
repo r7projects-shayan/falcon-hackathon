@@ -1,0 +1,4 @@
+streamlit
+ai71
+python-dotenv
+requests
