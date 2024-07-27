@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+from AI71 import get_ai71_response 
 
 st.title("Healthcare System Dashboard")
 
@@ -8,6 +9,17 @@ page = st.sidebar.radio("Go to", ["Home", "AI Chatbot Diagnosis", "Drug Identifi
 
 if page == "Home":
     st.write("Welcome to the Healthcare System Dashboard!")
+    
+    # AI71 Chat Interface
+    st.subheader("AI Assistant")
+    user_input = st.text_input("You:", key="user_input")
+    if st.button("Send"):
+        if user_input:
+            response = get_ai71_response(user_input)
+            st.text_area("AI:", value=response, height=100, max_chars=None, key="ai_response")
+        else:
+            st.warning("Please enter a message.")
+
 elif page == "AI Chatbot Diagnosis":
     st.write("This is the AI Chatbot Diagnosis page.")
     if st.button("Get Diagnosis"):
