@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-from AI71 import get_ai71_response 
+from AI71 import get_ai71_response
 
 st.title("Healthcare System Dashboard")
 
