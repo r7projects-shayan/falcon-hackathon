@@ -40,11 +40,17 @@ A system leveraging AI for remote healthcare, including features for AI chatbot 
     cd backend
     ```
 
-2. Run the Django server:
+2. Run the Django migrations:
     ```bash
     python manage.py migrate
+    ```
+
+3. Run the Django server:
+    ```bash
     python manage.py runserver
     ```
+
+    Django server will start at: http://127.0.0.1:8000/
 
 ### Running the Frontend
 
@@ -57,8 +63,9 @@ A system leveraging AI for remote healthcare, including features for AI chatbot 
     ```bash
     streamlit run home.py
     ```
+    Streamlit server will start at: http://localhost:8501
 
-## Basic Chat Functionality
+## AI71 Basic Chat Functionality
 
 This project now includes basic chat functionality using the AI71 platform. This feature allows users to interact with an AI chatbot for various purposes, such as answering questions or providing assistance.
 
