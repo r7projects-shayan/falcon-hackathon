@@ -2,3 +2,4 @@ Django
 streamlit
 django-cors-headers
 ai71
+python-dotenv
