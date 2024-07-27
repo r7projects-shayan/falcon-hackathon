@@ -27,6 +27,11 @@ This is the frontend for our Healthcare System Dashboard, built using Streamlit.
 - Drug Identification page
 - Outbreak Alert page
 
+## Usage
+
+- Navigate to the Home tab to interact with the AI71 chatbot.
+- Use the sidebar to switch between different features.
+
 ## Note
 
 Ensure that your Django backend is running on `http://localhost:8000` for the API calls to work correctly.
