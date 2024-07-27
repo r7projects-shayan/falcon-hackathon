@@ -1,9 +1,10 @@
 import streamlit as st
 import requests
-from AI71 import get_ai71_response
+from utils.ai71_utils import get_ai71_response
 
 st.title("Healthcare System Dashboard")
 
+# Sidebar Navigation
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", ["Home", "AI Chatbot Diagnosis", "Drug Identification", "Outbreak Alert"])
 
@@ -28,6 +29,7 @@ elif page == "AI Chatbot Diagnosis":
             st.write(response.json())
         else:
             st.write("Failed to fetch diagnosis.")
+
 elif page == "Drug Identification":
     st.write("This is the Drug Identification page.")
     if st.button("Identify Drug"):
@@ -36,6 +38,7 @@ elif page == "Drug Identification":
             st.write(response.json())
         else:
             st.write("Failed to fetch drug information.")
+
 elif page == "Outbreak Alert":
     st.write("This is the Outbreak Alert page.")
     # Add content for Outbreak Alert page

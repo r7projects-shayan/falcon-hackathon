@@ -1,5 +1,8 @@
 Django
-streamlit
+djangorestframework
 django-cors-headers
-ai71
 python-dotenv
+gunicorn
+streamlit
+requests
+ai71
