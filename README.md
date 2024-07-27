@@ -52,6 +52,21 @@ A system leveraging AI for remote healthcare, including features for AI chatbot 
     ```bash
     streamlit run home.py
     ```
+## Basic Chat Functionality
+
+This project now includes basic chat functionality using the AI71 platform. This feature allows users to interact with an AI chatbot for various purposes, such as answering questions or providing assistance.
+
+### How to Use
+
+1. Start the application.
+2. Access the chat interface.
+3. Type your questions or messages.
+4. Receive responses from the AI71-powered chatbot.
+
+### Requirements
+
+- [AI71 API Ky](https://marketplace.ai71.ai/api-keys)
+- [AI71 documntation](https://marketplace.ai71.ai/documentation)
 
 ## Contributing
 
