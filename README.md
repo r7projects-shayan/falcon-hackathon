@@ -1,6 +1,6 @@
 # Healthcare AI System
 
-A system leveraging AI for remote healthcare, including features for AI chatbot diagnosis, drug identification, and public health impact.
+A system leveraging AI for remote healthcare, including features for AI chatbot diagnosis, drug identification, doctors handwriting identification.
 
 ## Project Structure
 
