@@ -19,14 +19,18 @@ A system leveraging AI for remote healthcare, including features for AI chatbot 
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/djpapzin/healthcare-ai-system.git
-    cd healthcare-ai-system
+    git clone https://github.com/r7projects-shayan/falcon-hackathon.git
+    cd falcon-hackathon
     ```
 
 2. Install the required packages:
     ```bash
     pip install -r requirements.txt
     ```
+
+3. Setup environment variables:
+4. ```bash
+cp .env.example .env
 
 ### Running the Backend
 
@@ -52,6 +56,7 @@ A system leveraging AI for remote healthcare, including features for AI chatbot 
     ```bash
     streamlit run home.py
     ```
+    
 ## Basic Chat Functionality
 
 This project now includes basic chat functionality using the AI71 platform. This feature allows users to interact with an AI chatbot for various purposes, such as answering questions or providing assistance.
@@ -65,7 +70,7 @@ This project now includes basic chat functionality using the AI71 platform. This
 
 ### Requirements
 
-- [AI71 API Ky](https://marketplace.ai71.ai/api-keys)
+- [AI71 API Key](https://marketplace.ai71.ai/api-keys)
 - [AI71 documntation](https://marketplace.ai71.ai/documentation)
 
 ## Contributing
