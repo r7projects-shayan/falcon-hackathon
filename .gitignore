@@ -3,3 +3,8 @@ __pycache__/
 db.sqlite3
 .env
 .conda/
+
+backend/.hc_backend
+backend/api/migrations/*
+
+frontend/.hc_frontend

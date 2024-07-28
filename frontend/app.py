@@ -1,6 +1,8 @@
 import streamlit as st
+from streamlit_extras.switch_page_button import switch_page
 import requests
 from utils.ai71_utils import get_ai71_response
+from datetime import datetime
 
 st.title("Healthcare System Dashboard")
 
@@ -31,13 +33,29 @@ elif page == "AI Chatbot Diagnosis":
             st.write("Failed to fetch diagnosis.")
 
 elif page == "Drug Identification":
-    st.write("This is the Drug Identification page.")
-    if st.button("Identify Drug"):
-        response = requests.get("http://localhost:8000/api/drug/")
-        if response.status_code == 200:
-            st.write(response.json())
+    uploaded_file = st.file_uploader("Upload prescription", type=["png","jpeg"])
+
+
+    if uploaded_file is None:
+        st.info(f"""
+                👆 Upload your prescription image first.
+                """)
+
+
+
+    if st.button("Send Prescription"):
+
+        url = 'http://localhost:8000/api/upload_drug_prescription/'
+
+        response = requests.post(url,data={'created':datetime.now(), 'name':'myfile'}, files={'file': uploaded_file})
+
+        if response.status_code == 201:
+            st.write("Image uploaded!")
+            # switch_page("app")
+            
+
         else:
-            st.write("Failed to fetch drug information.")
+            st.write(response.status_code)
 
 elif page == "Outbreak Alert":
     st.write("This is the Outbreak Alert page.")
