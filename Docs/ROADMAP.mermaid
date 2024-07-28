@@ -1,0 +1,33 @@
+graph TD
+    A[Start] --> B[Foundation]
+    B --> C[Core Features]
+    C --> D[Enhanced Patient Care]
+    D --> E[Public Health & Analytics]
+    E --> F[Integration & Optimization]
+    F --> G[Testing & Refinement]
+    G --> H[Pilot Launch]
+    H --> I[End]
+
+    subgraph "Frontend (Streamlit)"
+    B1[Set up Streamlit]
+    C1[Implement Chatbot UI]
+    C2[Develop Drug ID UI]
+    D1[Create Telemedicine Interface]
+    E1[Develop Analytics Visualizations]
+    end
+
+    subgraph "Backend (Django & AI)"
+    B2[Configure Django]
+    B3[Integrate AI71 API]
+    C3[Develop Diagnosis Algorithm]
+    C4[Implement Drug Database]
+    D2[Develop Resource Management]
+    E2[Implement Outbreak Detection]
+    F1[Integrate All Modules]
+    end
+
+    B --> B1 & B2 & B3
+    C --> C1 & C2 & C3 & C4
+    D --> D1 & D2
+    E --> E1 & E2
+    F --> F1
