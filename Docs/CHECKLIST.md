@@ -1,9 +1,9 @@
 # AI-Driven Remote Healthcare Solution Checklist
 
 ## Foundation
-- [ ] Set up Streamlit frontend
-- [ ] Configure Django backend
-- [ ] Integrate AI71 API (Falcon LLM)
+- [x] Set up Streamlit frontend
+- [x] Configure Django backend
+- [x] Integrate AI71 API (Falcon LLM)
 
 ## Core Features
 - [ ] Implement AI Chatbot UI
@@ -23,6 +23,8 @@
 - [ ] Integrate All Modules
 - [ ] Implement User Authentication
 - [ ] Develop API for Third-party Integrations
+
+# TO-DO After Hackathon due to time limitation
 
 ## Testing & Refinement
 - [ ] Conduct Security and Privacy Testing
