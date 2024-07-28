@@ -3,6 +3,3 @@ djangorestframework
 django-cors-headers
 python-dotenv
 gunicorn
-streamlit
-requests
-ai71
