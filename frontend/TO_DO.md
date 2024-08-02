@@ -1,2 +1,0 @@
-## Create a detailed plan for integrating AI71 and PubMed APIs into the backend.
-- [How to Use the Doctor's handwriting Detection API](https://universe.roboflow.com/pratyush-garg-jdv57/doctor-s-handwriting/model/1)
