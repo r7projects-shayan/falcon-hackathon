@@ -4,3 +4,4 @@ django-cors-headers
 python-dotenv
 gunicorn
 roboflowoak
+ai71

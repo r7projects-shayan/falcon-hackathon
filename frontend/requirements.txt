@@ -4,3 +4,8 @@ requests
 python-dotenv
 ai71
 opencv-python
+inference-sdk
+supervision
+matplotlib
+pillow
+numpy
