@@ -3,3 +3,4 @@ streamlit_extras
 requests
 python-dotenv
 ai71
+opencv-python
