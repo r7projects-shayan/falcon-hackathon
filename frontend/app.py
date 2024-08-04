@@ -1,5 +1,4 @@
 import streamlit as st
-from streamlit_extras.switch_page_button import switch_page
 import requests
 from utils.ai71_utils import get_ai71_response
 from datetime import datetime
@@ -10,6 +9,7 @@ from inference_sdk import InferenceHTTPClient
 import supervision as sv
 import matplotlib.pyplot as plt
 import io
+import os
 
 st.title("Healthcare System Dashboard")
 
