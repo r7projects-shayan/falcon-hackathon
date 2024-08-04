@@ -5,11 +5,23 @@ from datetime import datetime
 import cv2
 import numpy as np
 from PIL import Image
-from inference_sdk import InferenceHTTPClient
 import supervision as sv
 import matplotlib.pyplot as plt
 import io
 import os
+
+# Install required packages
+import subprocess
+import sys
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+required_packages = ['inference-sdk', 'inference-cli', 'opencv-python', 'opencv-python-headless', 'opencv-contrib-python']
+for package in required_packages:
+    install(package)
+
+from inference_sdk import InferenceHTTPClient
 
 st.title("Healthcare System Dashboard")
 
@@ -28,13 +40,44 @@ def preprocess_image(image):
     # Convert PIL Image to OpenCV format
     image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     
-    # Preprocessing steps (simplified for brevity)
+    # Convert to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-    _, binary = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    edges = cv2.Canny(binary, 100, 200)
     
-    return edges
+    # Remove noise
+    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+    
+    # Thresholding/Binarization
+    _, binary = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    
+    # Dilation and Erosion
+    kernel = np.ones((1, 1), np.uint8)
+    dilated = cv2.dilate(binary, kernel, iterations=1)
+    eroded = cv2.erode(dilated, kernel, iterations=1)
+    
+    # Edge detection
+    edges = cv2.Canny(eroded, 100, 200)
+    
+    # Deskewing
+    coords = np.column_stack(np.where(edges > 0))
+    angle = cv2.minAreaRect(coords)[-1]
+    if angle < -45:
+        angle = -(90 + angle)
+    else:
+        angle = -angle
+    
+    (h, w) = edges.shape[:2]
+    center = (w // 2, h // 2)
+    M = cv2.getRotationMatrix2D(center, angle, 1.0)
+    deskewed = cv2.warpAffine(edges, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+    
+    # Find contours
+    contours, _ = cv2.findContours(deskewed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+    # Draw contours on the original image
+    contour_image = image.copy()
+    cv2.drawContours(contour_image, contours, -1, (0, 255, 0), 2)
+    
+    return contour_image
 
 def get_x1(detection):
     return detection.xyxy[0][0]
@@ -82,11 +125,40 @@ elif page == "Drug Identification":
             detections = sv.Detections.from_inference(result_doch1)
             
             # Sort detections and labels
+            def get_x1(detection):
+                return detection.xyxy[0][0]
+            
             sorted_indices = sorted(range(len(detections)), key=lambda i: get_x1(detections[i]))
+            sorted_detections = [detections[i] for i in sorted_indices]
             sorted_labels = [labels[i] for i in sorted_indices]
             
             # Convert list to string
             resulting_string = ''.join(sorted_labels)
+            
+            # Display results
+            st.subheader("Processed Prescription")
+            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+            
+            # Plot bounding boxes
+            image_with_boxes = preprocessed_image.copy()
+            for detection in sorted_detections:
+                x1, y1, x2, y2 = detection.xyxy[0]
+                cv2.rectangle(image_with_boxes, (int(x1), int(y1)), (int(x2), int(y2)), (255, 0, 0), 2)
+            ax1.imshow(cv2.cvtColor(image_with_boxes, cv2.COLOR_BGR2RGB))
+            ax1.set_title("Bounding Boxes")
+            ax1.axis('off')
+            
+            # Plot labels
+            image_with_labels = preprocessed_image.copy()
+            for i, detection in enumerate(sorted_detections):
+                x1, y1, x2, y2 = detection.xyxy[0]
+                label = sorted_labels[i]
+                cv2.putText(image_with_labels, label, (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+            ax2.imshow(cv2.cvtColor(image_with_labels, cv2.COLOR_BGR2RGB))
+            ax2.set_title("Labels")
+            ax2.axis('off')
+            
+            st.pyplot(fig)
             
             st.write("Extracted Text from Prescription:", resulting_string)
             
