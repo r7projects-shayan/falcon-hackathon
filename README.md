@@ -61,7 +61,7 @@ A system leveraging AI for remote healthcare, including features for AI chatbot 
 
 2. Run the Streamlit app:
     ```bash
-    streamlit run home.py
+    streamlit run app.py
     ```
     Streamlit server will start at: http://localhost:8501
 
