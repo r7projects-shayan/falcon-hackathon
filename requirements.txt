@@ -7,3 +7,9 @@ streamlit
 requests
 ai71
 opencv-python
+roboflowoak
+inference-sdk
+supervision
+matplotlib
+pillow
+numpy
