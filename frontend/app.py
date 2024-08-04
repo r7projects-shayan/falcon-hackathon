@@ -19,9 +19,10 @@ page = st.sidebar.radio("Go to", ["Home", "AI Chatbot Diagnosis", "Drug Identifi
 
 # Initialize the Inference Client
 CLIENT = InferenceHTTPClient(
-    api_url="https://detect.roboflow.com",
-    api_key="LSbJ0tl3WTLn4Aqar0Sp"
+    api_url=os.getenv("INFERENCE_API_URL"),
+    api_key=os.getenv("INFERENCE_API_KEY")
 )
+
 
 def preprocess_image(image):
     # Convert PIL Image to OpenCV format
