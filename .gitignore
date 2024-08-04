@@ -8,3 +8,4 @@ backend/.hc_backend
 backend/api/migrations/*
 
 frontend/.hc_frontend
+.aider*
