@@ -9,18 +9,6 @@ import supervision as sv
 import matplotlib.pyplot as plt
 import io
 import os
-
-# Install required packages
-import subprocess
-import sys
-
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-required_packages = ['inference-sdk', 'inference-cli', 'opencv-python', 'opencv-python-headless', 'opencv-contrib-python']
-for package in required_packages:
-    install(package)
-
 from inference_sdk import InferenceHTTPClient
 
 st.title("Healthcare System Dashboard")
