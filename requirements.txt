@@ -6,3 +6,4 @@ gunicorn
 streamlit
 requests
 ai71
+opencv-python
