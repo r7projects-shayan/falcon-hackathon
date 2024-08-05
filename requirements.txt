@@ -7,7 +7,7 @@ streamlit
 streamlit_extras
 requests==2.26.0
 ai71
-opencv-python
+opencv-python-headless
 roboflowoak==0.0.12
 inference-sdk==0.15.2
 supervision
