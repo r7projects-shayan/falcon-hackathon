@@ -190,4 +190,3 @@ elif page == "Drug Identification":
 elif page == "Outbreak Alert":
     st.write("This is the Outbreak Alert page.")
     # Add content for Outbreak Alert page
-```
