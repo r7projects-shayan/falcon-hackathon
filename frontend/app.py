@@ -10,6 +10,10 @@ import matplotlib.pyplot as plt
 import io
 import os
 from inference_sdk import InferenceHTTPClient
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 st.title("Healthcare System Dashboard")
 
@@ -183,3 +187,4 @@ elif page == "Drug Identification":
 elif page == "Outbreak Alert":
     st.write("This is the Outbreak Alert page.")
     # Add content for Outbreak Alert page
+```
