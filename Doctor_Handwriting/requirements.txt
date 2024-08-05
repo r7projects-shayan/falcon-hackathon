@@ -1,0 +1,7 @@
+inference-sdk
+inference-cli
+opencv-python
+opencv-python-headless
+opencv-contrib-python
+roboflow 
+streamlit
