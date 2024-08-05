@@ -10,19 +10,16 @@ import matplotlib.pyplot as plt
 import io
 import os
 from inference_sdk import InferenceHTTPClient
-import streamlit.components.v1 as components
-import os
-from dotenv import load_dotenv
-
-# Load secrets from streamlit_secrets.toml
-components.declare_component("streamlit_secrets", url="http://localhost:3000")
-secrets = components.streamlit_secrets()
+import streamlit_secrets
 
 st.title("Healthcare System Dashboard")
 
 # Sidebar Navigation
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", ["Home", "AI Chatbot Diagnosis", "Drug Identification", "Outbreak Alert"])
+
+# Load secrets from streamlit_secrets.toml
+secrets = streamlit_secrets.load_secrets("streamlit_secrets.toml")
 
 # Initialize the Inference Client
 CLIENT = InferenceHTTPClient(
@@ -190,3 +187,6 @@ elif page == "Drug Identification":
 elif page == "Outbreak Alert":
     st.write("This is the Outbreak Alert page.")
     # Add content for Outbreak Alert page
+```
+
+Make sure to install the `streamlit-secrets` package using `pip install streamlit-secrets` before running your Streamlit app.
