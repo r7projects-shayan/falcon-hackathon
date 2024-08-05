@@ -23,10 +23,10 @@ CLIENT = InferenceHTTPClient(
     api_key=os.getenv("INFERENCE_API_KEY")
 )
 
-
-def preprocess_image(image):
-    # Convert PIL Image to OpenCV format
-    image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+# Function to preprocess the image
+def preprocess_image(image_path):
+    # Load the image
+    image = cv2.imread(image_path)
     
     # Convert to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -103,9 +103,14 @@ elif page == "Drug Identification":
 
         if st.button("Process Prescription"):
             # Preprocess the image
-            preprocessed_image = preprocess_image(image)
+            #preprocessed_image = preprocess_image(image)
+            
+            # Save the image to a temporary file
+            temp_image_path = "temp_image.jpg"
+            image.save(temp_image_path)
             
             # Perform inference
+            preprocessed_image = preprocess_image(temp_image_path)
             result_doch1 = CLIENT.infer(preprocessed_image, model_id="doctor-s-handwriting/1")
             
             # Extract labels and detections
@@ -113,9 +118,6 @@ elif page == "Drug Identification":
             detections = sv.Detections.from_inference(result_doch1)
             
             # Sort detections and labels
-            def get_x1(detection):
-                return detection.xyxy[0][0]
-            
             sorted_indices = sorted(range(len(detections)), key=lambda i: get_x1(detections[i]))
             sorted_detections = [detections[i] for i in sorted_indices]
             sorted_labels = [labels[i] for i in sorted_indices]
@@ -171,6 +173,9 @@ elif page == "Drug Identification":
             
             st.subheader("AI Analysis of the Prescription")
             st.write(llm_response)
+
+            # Remove the temporary image file
+            os.remove(temp_image_path)
 
     else:
         st.info("Please upload a prescription image to proceed.")
