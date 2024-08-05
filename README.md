@@ -81,6 +81,22 @@ This project now includes basic chat functionality using the AI71 platform. This
 - [AI71 API Key](https://marketplace.ai71.ai/api-keys)
 - [AI71 documntation](https://marketplace.ai71.ai/documentation)
 
+## Doctor's Handwriting Identification and OCR
+
+This project includes functionality to identify and process doctor's handwriting from prescription images. It uses an AI model to detect bounding boxes around handwritten text and classify each character. The classified characters are then combined to form the extracted text, which is further processed by an OCR model to convert it into digital text.
+
+### How to Use
+
+1. Start the application.
+2. Navigate to the "Drug Identification" page.
+3. Upload a prescription image.
+4. Click the "Process Prescription" button.
+5. The application will display the processed image with bounding boxes and labels, along with the extracted digital text.
+
+### Requirements
+
+- Inference API URL and Key (set in environment variables)
+
 ## Contributing
 
 Feel free to fork this repository and submit pull requests. For major changes, please open an issue first to discuss what you would like to change.
