@@ -4,6 +4,7 @@ django-cors-headers
 python-dotenv
 gunicorn
 streamlit
+streamlit_extras
 requests
 ai71
 opencv-python
