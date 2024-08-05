@@ -187,6 +187,3 @@ elif page == "Drug Identification":
 elif page == "Outbreak Alert":
     st.write("This is the Outbreak Alert page.")
     # Add content for Outbreak Alert page
-```
-
-Make sure to install the `streamlit-secrets` package using `pip install streamlit-secrets` before running your Streamlit app.
