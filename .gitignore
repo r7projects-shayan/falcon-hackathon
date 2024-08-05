@@ -11,3 +11,4 @@ backend/api/migrations/*
 
 frontend/.hc_frontend
 .aider*
+streamlit_secrets.toml
