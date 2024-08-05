@@ -5,11 +5,11 @@ python-dotenv
 gunicorn
 streamlit
 streamlit_extras
-requests
+requests==2.26.0
 ai71
 opencv-python
-roboflowoak
-inference-sdk
+roboflowoak==0.0.12
+inference-sdk== 0.15.2
 supervision
 matplotlib
 pillow
