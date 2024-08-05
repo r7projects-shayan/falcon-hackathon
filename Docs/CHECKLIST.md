@@ -6,9 +6,11 @@
 - [x] Integrate AI71 API (Falcon LLM)
 
 ## Core Features
-- [ ] Implement AI Chatbot UI
+- [x] Implement AI Chatbot UI
 - [ ] Develop Diagnosis Algorithm
-- [ ] Create Drug Identification UI
+- [x] Create Drug Identification UI
+- [x] Implement Doctor's Handwriting Identification
+- [x] Implement OCR for Handwriting
 - [ ] Implement Drug Database
 
 ## Enhanced Patient Care
