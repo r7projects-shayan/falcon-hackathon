@@ -197,3 +197,16 @@ else:
     elif page == "Outbreak Alert":
         st.write("This is the Outbreak Alert page.")
         # Add content for Outbreak Alert page
+
+# Auto-scroll to the bottom of the chat container
+st.markdown(
+    """
+    <script>
+    const chatContainer = document.querySelector('.st-chat-container');
+    if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    </script>
+    """,
+    unsafe_allow_html=True,
+)
