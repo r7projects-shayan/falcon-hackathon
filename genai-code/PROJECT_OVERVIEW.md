@@ -34,24 +34,24 @@ The project is a healthcare application that allows users to upload prescription
 ### Checklist / To-Do List
 
 1. **Frontend Development**:
-   - [ ] Implement image upload functionality in the Streamlit app.
-   - [ ] Ensure the image is correctly sent to the backend.
+   - [x] Implement image upload functionality in the Streamlit app.
+   - [x] Ensure the image is correctly sent to the backend.
 
 2. **Backend Development**:
    - [ ] Set up Django server to receive and handle uploaded images.
-   - [ ] Integrate Doctor's Handwriting Detection API to process the images.
-   - [ ] Extract bounding boxes and classes from the API response.
+   - [x] Integrate Doctor's Handwriting Detection API to process the images.
+   - [x] Extract bounding boxes and classes from the API response.
    - [ ] Integrate OCR model to convert bounding boxes to text.
-   - [ ] Process the OCR text using the Falcon LLM model via AI71 API.
+   - [x] Process the OCR text using the Falcon LLM model via AI71 API.
    - [ ] Send the final processed text to the frontend.
 
 3. **API Integration**:
-   - [ ] Ensure proper integration of the Doctor's Handwriting Detection API.
-   - [ ] Ensure proper integration of the Falcon LLM model via AI71 API.
+   - [x] Ensure proper integration of the Doctor's Handwriting Detection API.
+   - [x] Ensure proper integration of the Falcon LLM model via AI71 API.
    - [ ] Implement fallback solutions (like iframes) for Streamlit if API integration fails.
 
 4. **Deployment**:
-   - [ ] Deploy the handwriting classification API on HuggingFace.
+   - [x] Deploy the handwriting classification API on HuggingFace.
    - [ ] Deploy the Streamlit app and ensure it is linked correctly with the backend.
    - [ ] Hide the HuggingFace name in the deployed interface for security reasons.
 
@@ -66,4 +66,4 @@ The project is a healthcare application that allows users to upload prescription
    - [ ] Keep the team updated on progress and any issues encountered.
 
 7. **Deadline Management**:
-   - [ ] Ensure all tasks are completed by the deadline (August 6).
+   - [ ] Ensure all tasks are completed by the deadline (August 6).</source>
