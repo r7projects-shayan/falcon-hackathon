@@ -10,10 +10,13 @@ import matplotlib.pyplot as plt
 import io
 import os
 from inference_sdk import InferenceHTTPClient
+import streamlit.components.v1 as components
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+# Load secrets from streamlit_secrets.toml
+components.declare_component("streamlit_secrets", url="http://localhost:3000")
+secrets = components.streamlit_secrets()
 
 st.title("Healthcare System Dashboard")
 
@@ -23,8 +26,8 @@ page = st.sidebar.radio("Go to", ["Home", "AI Chatbot Diagnosis", "Drug Identifi
 
 # Initialize the Inference Client
 CLIENT = InferenceHTTPClient(
-    api_url=os.getenv("INFERENCE_API_URL"),
-    api_key=os.getenv("INFERENCE_API_KEY")
+    api_url=secrets["INFERENCE_API_URL"],
+    api_key=secrets["INFERENCE_API_KEY"]
 )
 
 # Function to preprocess the image
