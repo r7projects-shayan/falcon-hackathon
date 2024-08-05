@@ -2,6 +2,10 @@
 
 A system leveraging AI for remote healthcare, including features for AI chatbot diagnosis, drug identification, doctors handwriting identification.
 
+## Demo
+
+A live demo of the application is available at: https://healthcare-ai-falcon-hackathon.streamlit.app/
+
 ## Project Structure
 
 - `frontend`: Contains the Streamlit frontend code.

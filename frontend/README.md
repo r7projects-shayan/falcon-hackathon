@@ -2,6 +2,11 @@
 
 This is the frontend for our Healthcare System Dashboard, built using Streamlit.
 
+## Demo
+
+A live demo of the application is available at: https://healthcare-ai-falcon-hackathon.streamlit.app/
+
+
 ## Setup
 
 1. Install required packages:
@@ -35,7 +40,3 @@ This is the frontend for our Healthcare System Dashboard, built using Streamlit.
 ## Note
 
 Ensure that your Django backend is running on `http://localhost:8000` for the API calls to work correctly.
-
-## Demo
-
-A live demo of the application is available at: https://healthcare-ai-falcon-hackathon.streamlit.app/
