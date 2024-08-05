@@ -106,15 +106,14 @@ elif page == "Drug Identification":
         st.image(image, caption="Uploaded Prescription", use_column_width=True)
 
         if st.button("Process Prescription"):
-            # Preprocess the image
-            #preprocessed_image = preprocess_image(image)
-            
             # Save the image to a temporary file
             temp_image_path = "temp_image.jpg"
             image.save(temp_image_path)
             
-            # Perform inference
+            # Preprocess the image
             preprocessed_image = preprocess_image(temp_image_path)
+
+            # Perform inference
             result_doch1 = CLIENT.infer(preprocessed_image, model_id="doctor-s-handwriting/1")
             
             # Extract labels and detections
