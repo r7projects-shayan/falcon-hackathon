@@ -1,0 +1,10 @@
+pandas
+regex
+nltk
+sckit-learn
+numpy
+streamlit
+tensorflow
+opencv-python
+opencv-python-headless
+opencv-contrib-python
