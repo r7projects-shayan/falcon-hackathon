@@ -76,7 +76,23 @@ else:
 
     if page == "Home":
         st.write("Welcome to the Healthcare System Dashboard!")
-        st.write("Please use the sidebar to navigate to different features.")
+        st.write("This application provides various AI-powered tools for remote healthcare, including:")
+        st.write("- **AI Chatbot Diagnosis:** Interact with an AI chatbot for preliminary diagnosis and medical information.")
+        st.write("- **Drug Identification:** Upload a prescription image to identify medications and access relevant details.")
+        st.write("- **Doctor's Handwriting Identification:** Our system can accurately recognize and process doctor's handwriting.")
+        st.write("- **Outbreak Alert:** (Coming Soon) Stay informed about potential disease outbreaks in your area.")
+
+        st.write("**How it Works:**")
+        st.write("1. **Upload:** You can upload a prescription image for drug identification.")
+        st.write("2. **Process:** Our AI models will analyze the image and extract relevant information.")
+        st.write("3. **Results:** You will receive identified drug names, uses, side effects, and more.")
+
+        st.write("**Key Features:**")
+        st.write("- **AI-Powered:** Leverages advanced AI models for accurate analysis and diagnosis.")
+        st.write("- **User-Friendly:** Simple and intuitive interface for easy navigation and interaction.")
+        st.write("- **Secure:** Your data is protected and handled with confidentiality.")
+
+        st.write("**Please use the sidebar to navigate to different features.**")
 
     elif page == "AI Chatbot Diagnosis":
         st.write("This is the AI Chatbot Diagnosis page.")
