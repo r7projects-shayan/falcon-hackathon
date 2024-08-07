@@ -196,7 +196,20 @@ else:
     elif page == "AI Chatbot Diagnosis":
         st.write("Enter your symptoms separated by commas:")
         symptoms_input = st.text_area("Symptoms:")
-        if st.button("Predict"):
+        if st.button("Diagnose with LLM"):
+            if symptoms_input:
+                # Construct the prompt for the LLM
+                prompt = f"""Diagnose the most likely disease based on the following symptoms: {symptoms_input}
+                Provide a list of possible diseases and their likelihood, along with a brief explanation for each."""
+                # Get the LLM response
+                llm_response = get_ai71_response(prompt)
+                st.write("## LLM Diagnosis:")
+                st.write(llm_response)
+            else:
+                st.write("Please enter your symptoms.")
+
+        # --- Existing Logistic Regression model ---
+        if st.button("Predict with Logistic Regression"):
             if symptoms_input:
                 prediction = predict_disease(symptoms_input)
                 st.write(f"Predicted Disease: {prediction}")
