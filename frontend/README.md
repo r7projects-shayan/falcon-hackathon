@@ -2,6 +2,11 @@
 
 This is the frontend for our Healthcare System Dashboard, built using Streamlit.
 
+## Demo
+
+A live demo of the application is available at: https://healthcare-ai-falcon-hackathon.streamlit.app/
+
+
 ## Setup
 
 1. Install required packages:

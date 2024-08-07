@@ -28,6 +28,7 @@ Remember to always prioritize patient safety. Encourage users to consult healthc
         messages=messages,
         model="tiiuae/falcon-180B-chat",
         stream=False,
+        max_tokens=500  # Added max_tokens parameter
     )
 
     return response.choices[0].message.content

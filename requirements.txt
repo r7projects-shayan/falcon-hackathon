@@ -1,8 +1,10 @@
-Django
-djangorestframework
-django-cors-headers
-python-dotenv
-gunicorn
 streamlit
 requests
 ai71
+python-dotenv
+opencv-python
+supervision
+matplotlib
+Pillow
+inference-sdk
+tensorflow

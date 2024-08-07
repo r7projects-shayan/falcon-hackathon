@@ -6,9 +6,11 @@
 - [x] Integrate AI71 API (Falcon LLM)
 
 ## Core Features
-- [ ] Implement AI Chatbot UI
-- [ ] Develop Diagnosis Algorithm
-- [ ] Create Drug Identification UI
+- [x] Implement AI Chatbot UI
+- [x] Develop Diagnosis Algorithm
+- [x] Create Drug Identification UI
+- [x] Implement Doctor's Handwriting Identification
+- [x] Implement OCR for Handwriting
 - [ ] Implement Drug Database
 
 ## Enhanced Patient Care
@@ -16,26 +18,23 @@
 - [ ] Implement Resource Management System
 
 ## Public Health & Analytics
-- [ ] Develop Analytics Visualizations
-- [ ] Implement Outbreak Detection System
+- [x] Develop Outbreak Alert Feature
+- [ ] Implement Data Visualization Dashboard
 
-## Integration & Optimization
-- [ ] Integrate All Modules
-- [ ] Implement User Authentication
-- [ ] Develop API for Third-party Integrations
+## Deployment
+- [x] Deploy the handwriting classification API on HuggingFace.
+- [ ] Deploy the Streamlit app and ensure it is linked correctly with the backend.
+- [ ] Hide the HuggingFace name in the deployed interface for security reasons.
 
-# TO-DO After Hackathon due to time limitation
+## Testing and Validation
+- [ ] Test the entire workflow from image upload to final text display.
+- [ ] Validate the accuracy of the handwriting detection and OCR models.
+- [ ] Ensure the Falcon LLM model provides accurate and contextually relevant text analysis.
 
-## Testing & Refinement
-- [ ] Conduct Security and Privacy Testing
-- [ ] Perform User Acceptance Testing
-- [ ] Optimize AI Models
+## Documentation and Communication
+- [ ] Document the workflow and API integration steps.
+- [ ] Communicate with the team leader for the exact prompt required for the healthcare automation part.
+- [ ] Keep the team updated on progress and any issues encountered.
 
-## Pilot Launch
-- [ ] Select Healthcare Facilities for Pilot
-- [ ] Provide Training and Support
-- [ ] Collect and Analyze Usage Data
-
-## Final Steps
-- [ ] Evaluate Pilot Results
-- [ ] Plan for Full-scale Launch
+## Deadline Management
+- [ ] Ensure all tasks are completed by the deadline (August 6).
