@@ -1,3 +1,6 @@
+import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'  # Add this line to disable oneDNN optimizations
+
 import streamlit as st
 import requests
 from utils.ai71_utils import get_ai71_response
