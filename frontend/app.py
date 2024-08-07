@@ -59,9 +59,9 @@ if 'model_llm' not in st.session_state:
     # --- Code from LLMs/LLMs_chatbot.ipynb ---
     # Load pre-trained model and vectorizer (replace with your actual file paths)
     st.session_state.model_llm = LogisticRegression()
-    st.session_state.model_llm = pd.read_pickle("logistic_regression_model.pkl")  # Replace with your model file
+    st.session_state.model_llm = pd.read_pickle("LLMs/logistic_regression_model.pkl")  
     st.session_state.vectorizer = CountVectorizer()
-    st.session_state.vectorizer = pd.read_pickle("vectorizer.pkl")  # Replace with your vectorizer file
+    st.session_state.vectorizer = pd.read_pickle("vectorizer.pkl")  
 
     # Load datasets (only for reference, not used for training)
     dataset_1 = pd.read_csv("Symptoms_Detection/training_data.csv")
@@ -364,7 +364,7 @@ else:
             title_element = article.find('a', class_='link-container')
             if title_element:
                 title = title_element.text.strip()
-                link = "https://www.who.int" + title_element['href']  # Construct the full URL
+                link = title_element['href']
 
                 date_element = article.find('span', class_='date')
                 date = date_element.text.strip() if date_element else "Date not found"
@@ -379,8 +379,8 @@ else:
                 else:
                     formatted_date = date
 
-                # Use markdown to create a link that opens in a new tab
-                st.markdown(f"**[{formatted_date}]({link}) {title}**", unsafe_allow_html=True)
+                st.write(f"**[{formatted_date}]({link})**", unsafe_allow_html=True)
+                st.write(f"**{title}**", unsafe_allow_html=True)
                 st.write("---")
             else:
                 st.write("Could not find article details.")
