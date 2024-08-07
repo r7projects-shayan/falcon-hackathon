@@ -1,6 +1,3 @@
-import os
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'  # Add this line to disable oneDNN optimizations
-
 import streamlit as st
 import requests
 from utils.ai71_utils import get_ai71_response
@@ -32,12 +29,62 @@ nltk.download('wordnet')
 
 st.title("Healthcare System Dashboard")
 
-# Load the disease classification model
-try:
-    disease_model = tf.keras.models.load_model('FINAL_MODEL.keras')
-except FileNotFoundError:
-    st.error("Disease classification model not found. Please ensure 'FINAL_MODEL.keras' is in the same directory as this app.")
-    disease_model = None
+# --- Session State Initialization ---
+if 'disease_model' not in st.session_state:
+    try:
+        st.session_state.disease_model = tf.keras.models.load_model('FINAL_MODEL.keras')
+    except FileNotFoundError:
+        st.error("Disease classification model not found. Please ensure 'FINAL_MODEL.keras' is in the same directory as this app.")
+        st.session_state.disease_model = None
+
+if 'model_llm' not in st.session_state:
+    # --- Code from LLMs/LLMs_chatbot.ipynb ---
+    def preprocess_text(text):
+        # Convert to lowercase
+        text = text.lower()
+
+        cleaned_text = re.sub(r'[^a-zA-Z0-9\s\,]', ' ', text)
+        # Tokenize text
+        tokens = word_tokenize(cleaned_text)
+
+        # Remove stop words
+        stop_words = set(stopwords.words('english'))
+        tokens = [word for word in tokens if word not in stop_words]
+
+        # Rejoin tokens into a single string
+        cleaned_text = ' '.join(tokens)
+
+        return cleaned_text
+
+    # Load datasets
+    dataset_1 = pd.read_csv("Symptoms_Detection/training_data.csv")
+    dataset_2 = pd.read_csv("Symptoms_Detection/Symptom2Disease.csv")
+
+    # Create symptoms_text column
+    dataset_1['symptoms_text'] = dataset_1.apply(lambda row: ','.join([col for col in dataset_1.columns if row[col] == 1]), axis=1)
+    final_dataset = pd.DataFrame(dataset_1[["prognosis", "symptoms_text"]])
+    final_dataset.columns = ['label', 'text']
+
+    # Combine datasets
+    df_combined = pd.concat([final_dataset, dataset_2[['label', 'text']]], axis=0, ignore_index=True)
+
+    # Preprocess text data
+    df_combined["cleaned_text"] = df_combined["text"].apply(preprocess_text)
+
+    # Split data and train model
+    X = df_combined['cleaned_text']
+    y = df_combined['label']
+    vectorizer = CountVectorizer()
+    X_vectorized = vectorizer.fit_transform(X)
+    X_train, X_test, y_train, y_test = train_test_split(X_vectorized, y, test_size=0.2, random_state=42)
+    model_llm = LogisticRegression()
+    model_llm.fit(X_train, y_train)
+
+    # Store in session state
+    st.session_state.model_llm = model_llm
+    st.session_state.vectorizer = vectorizer
+    st.session_state.df_combined = df_combined
+# --- End of Session State Initialization ---
 
 # Sidebar Navigation
 st.sidebar.title("Navigation")
@@ -100,55 +147,27 @@ else:
     def get_x1(detection):
         return detection.xyxy[0][0]
 
-    # --- Code from LLMs/LLMs_chatbot.ipynb ---
-    def preprocess_text(text):
-        # Convert to lowercase
-        text = text.lower()
-
-        cleaned_text = re.sub(r'[^a-zA-Z0-9\s\,]', ' ', text)
-        # Tokenize text
-        tokens = word_tokenize(cleaned_text)
-
-        # Remove stop words
-        stop_words = set(stopwords.words('english'))
-        tokens = [word for word in tokens if word not in stop_words]
-
-        # Rejoin tokens into a single string
-        cleaned_text = ' '.join(tokens)
-
-        return cleaned_text
-
-    # Load datasets
-    dataset_1 = pd.read_csv("Symptoms_Detection/training_data.csv")
-    dataset_2 = pd.read_csv("Symptoms_Detection/Symptom2Disease.csv")
-
-    # Create symptoms_text column
-    dataset_1['symptoms_text'] = dataset_1.apply(lambda row: ','.join([col for col in dataset_1.columns if row[col] == 1]), axis=1)
-    final_dataset = pd.DataFrame(dataset_1[["prognosis", "symptoms_text"]])
-    final_dataset.columns = ['label', 'text']
-
-    # Combine datasets
-    df_combined = pd.concat([final_dataset, dataset_2[['label', 'text']]], axis=0, ignore_index=True)
-
-    # Preprocess text data
-    df_combined["cleaned_text"] = df_combined["text"].apply(preprocess_text)
-
-    # Split data and train model
-    X = df_combined['cleaned_text']
-    y = df_combined['label']
-    vectorizer = CountVectorizer()
-    X_vectorized = vectorizer.fit_transform(X)
-    X_train, X_test, y_train, y_test = train_test_split(X_vectorized, y, test_size=0.2, random_state=42)
-    model_llm = LogisticRegression()
-    model_llm.fit(X_train, y_train)
-
-    # Prediction function
+    # --- Prediction function (using session state) ---
     def predict_disease(symptoms):
         preprocessed_symptoms = preprocess_text(symptoms)
-        symptoms_vectorized = vectorizer.transform([preprocessed_symptoms])
-        prediction = model_llm.predict(symptoms_vectorized)
+        symptoms_vectorized = st.session_state.vectorizer.transform([preprocessed_symptoms])
+        prediction = st.session_state.model_llm.predict(symptoms_vectorized)
         return prediction[0]
-    # --- End of code from LLMs/LLMs_chatbot.ipynb ---
+
+    # --- New function to analyze X-ray with LLM ---
+    def analyze_xray_with_llm(predicted_class):
+        prompt = f"""
+        Based on a chest X-ray analysis, the predicted condition is {predicted_class}. 
+        Please provide a concise summary of this condition, including:
+        - A brief description of the condition.
+        - Common symptoms associated with it.
+        - Potential causes.
+        - General treatment approaches.
+        - Any other relevant information for a patient.
+        """
+        llm_response = get_ai71_response(prompt)
+        st.write("## LLM Analysis of X-ray Results:")
+        st.write(llm_response)
 
     if page == "Home":
         st.write("Welcome to the Healthcare System Dashboard!")
@@ -272,7 +291,7 @@ else:
         st.write("Upload a chest X-ray image for disease detection.")
         uploaded_image = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
-        if uploaded_image is not None and disease_model is not None:
+        if uploaded_image is not None and st.session_state.disease_model is not None:
             # Display the image
             img_opened = Image.open(uploaded_image).convert('RGB')
             image_pred = np.array(img_opened)
@@ -288,7 +307,7 @@ else:
             image_pred = np.expand_dims(image_pred, axis=0)
 
             # Predict using the model
-            prediction = disease_model.predict(image_pred)
+            prediction = st.session_state.disease_model.predict(image_pred)
 
             # Get the predicted class
             predicted_ = np.argmax(prediction)
@@ -310,6 +329,9 @@ else:
             st.write("DETECTED DISEASE DISPLAY")
             st.write(f"Predicted Class : {predicted_}")
             st.write(predicted_class)
+
+            # Analyze X-ray results with LLM
+            analyze_xray_with_llm(predicted_class)
         else:
             st.write("Please upload an image file or ensure the disease model is loaded.")
 
@@ -330,7 +352,7 @@ else:
             title_element = article.find('a', class_='link-container')
             if title_element:
                 title = title_element.text.strip()
-                link = title_element['href']
+                link = f"https://www.who.int{title_element['href']}" # Create full link
 
                 date_element = article.find('span', class_='date')
                 date = date_element.text.strip() if date_element else "Date not found"
@@ -345,8 +367,8 @@ else:
                 else:
                     formatted_date = date
 
-                st.write(f"**[{title}](https://www.who.int{link})**")
-                st.write(f"{formatted_date}")
+                # Use markdown to create a link that opens in a new tab
+                st.write(f"**[{title}]({link})**  {formatted_date}")
                 st.write("---")
             else:
                 st.write("Could not find article details.")
