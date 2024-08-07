@@ -164,7 +164,7 @@ else:
                 image_with_boxes = preprocessed_image.copy()
                 for detection in sorted_detections:
                     x1, y1, x2, y2 = detection.xyxy[0]
-                    cv2.rectangle(image_with_boxes, (int(x1), int(y1)), (int(x2), int(y2)), (255, 0, 0), 2)      
+                    cv2.rectangle(image_with_boxes, (int(x1), int(y1)), (int(x2), int(x2)), (255, 0, 0), 2)      
                 ax1.imshow(cv2.cvtColor(image_with_boxes, cv2.COLOR_BGR2RGB))
                 ax1.set_title("Bounding Boxes")
                 ax1.axis('off')
@@ -225,21 +225,19 @@ else:
         articles = soup.find_all('div', class_='list-view--item')
 
         for article in articles[:5]: # Display the top 5 news articles
-            # ***UPDATED SELECTORS***
-            title_element = article.find('a', class_='link-container') # Example selector, replace if needed
+            title_element = article.find('a', class_='link-container')
             if title_element:
                 title = title_element.text.strip()
                 link = title_element['href']
+
+                date_element = article.find('span', class_='date')
+                date = date_element.text.strip() if date_element else "Date not found"
+
+                st.write(f"**[{title}](https://www.who.int{link})**")
+                st.write(f"{date}")
+                st.write("---")
             else:
-                title = "Title not found"
-                link = ""
-
-            date_element = article.find('span', class_='date') # Example selector, replace if needed
-            date = date_element.text.strip() if date_element else "Date not found"
-
-            st.write(f"**[{title}](https://www.who.int{link})**")
-            st.write(f"{date}")
-            st.write("---")
+                st.write("Could not find article details.")
 
 # Auto-scroll to the bottom of the chat container
 st.markdown(
