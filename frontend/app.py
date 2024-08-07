@@ -225,9 +225,17 @@ else:
         articles = soup.find_all('div', class_='list-view--item')
 
         for article in articles[:5]: # Display the top 5 news articles
-            title = article.find('h3', class_='heading').text.strip()
-            link = article.find('a')['href']
-            date = article.find('span', class_='date').text.strip()
+            # ***UPDATED SELECTORS***
+            title_element = article.find('a', class_='link-container') # Example selector, replace if needed
+            if title_element:
+                title = title_element.text.strip()
+                link = title_element['href']
+            else:
+                title = "Title not found"
+                link = ""
+
+            date_element = article.find('span', class_='date') # Example selector, replace if needed
+            date = date_element.text.strip() if date_element else "Date not found"
 
             st.write(f"**[{title}](https://www.who.int{link})**")
             st.write(f"{date}")
