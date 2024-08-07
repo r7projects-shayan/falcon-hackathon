@@ -12,6 +12,20 @@ import os
 from inference_sdk import InferenceHTTPClient
 from bs4 import BeautifulSoup
 import tensorflow as tf
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
+import nltk
+import re  # Import the 're' module for regular expressions
+from nltk.tokenize import word_tokenize  # Import word_tokenize
+from nltk.corpus import stopwords  # Import stopwords
+
+# Download NLTK data (only needs to be done once)
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
 
 st.title("Healthcare System Dashboard")
 
@@ -83,6 +97,56 @@ else:
     def get_x1(detection):
         return detection.xyxy[0][0]
 
+    # --- Code from LLMs/LLMs_chatbot.ipynb ---
+    def preprocess_text(text):
+        # Convert to lowercase
+        text = text.lower()
+
+        cleaned_text = re.sub(r'[^a-zA-Z0-9\s\,]', ' ', text)
+        # Tokenize text
+        tokens = word_tokenize(cleaned_text)
+
+        # Remove stop words
+        stop_words = set(stopwords.words('english'))
+        tokens = [word for word in tokens if word not in stop_words]
+
+        # Rejoin tokens into a single string
+        cleaned_text = ' '.join(tokens)
+
+        return cleaned_text
+
+    # Load datasets
+    dataset_1 = pd.read_csv("Symptoms_Detection/training_data.csv")
+    dataset_2 = pd.read_csv("Symptoms_Detection/Symptom2Disease.csv")
+
+    # Create symptoms_text column
+    dataset_1['symptoms_text'] = dataset_1.apply(lambda row: ','.join([col for col in dataset_1.columns if row[col] == 1]), axis=1)
+    final_dataset = pd.DataFrame(dataset_1[["prognosis", "symptoms_text"]])
+    final_dataset.columns = ['label', 'text']
+
+    # Combine datasets
+    df_combined = pd.concat([final_dataset, dataset_2[['label', 'text']]], axis=0, ignore_index=True)
+
+    # Preprocess text data
+    df_combined["cleaned_text"] = df_combined["text"].apply(preprocess_text)
+
+    # Split data and train model
+    X = df_combined['cleaned_text']
+    y = df_combined['label']
+    vectorizer = CountVectorizer()
+    X_vectorized = vectorizer.fit_transform(X)
+    X_train, X_test, y_train, y_test = train_test_split(X_vectorized, y, test_size=0.2, random_state=42)
+    model_llm = LogisticRegression()
+    model_llm.fit(X_train, y_train)
+
+    # Prediction function
+    def predict_disease(symptoms):
+        preprocessed_symptoms = preprocess_text(symptoms)
+        symptoms_vectorized = vectorizer.transform([preprocessed_symptoms])
+        prediction = model_llm.predict(symptoms_vectorized)
+        return prediction[0]
+    # --- End of code from LLMs/LLMs_chatbot.ipynb ---
+
     if page == "Home":
         st.write("Welcome to the Healthcare System Dashboard!")
         st.write("This application provides various AI-powered tools for remote healthcare, including:")
@@ -105,33 +169,14 @@ else:
         st.write("**Please use the sidebar to navigate to different features.**")
 
     elif page == "AI Chatbot Diagnosis":
-        st.write("This is the AI Chatbot Diagnosis page.")
-    
-        # Initialize chat history
-        if "messages" not in st.session_state:
-            st.session_state.messages = []
-    
-        # Display chat messages from history
-        for message in st.session_state.messages:
-            with st.chat_message(message["role"]):
-                st.write(message["content"])  # Add this line to display message content
-    
-        # Get user input
-        prompt = st.text_input("You:")
-    
-        if st.button("Send"):
-            # Add user message to chat history
-            st.session_state.messages.append({"role": "user", "content": prompt})
-    
-            # Get AI response
-            response = get_ai71_response(prompt)
-    
-            # Add AI message to chat history
-            st.session_state.messages.append({"role": "assistant", "content": response})
-    
-            # Display AI message in chat
-            with st.chat_message("assistant"):
-                st.write(response)  
+        st.write("Enter your symptoms separated by commas:")
+        symptoms_input = st.text_area("Symptoms:")
+        if st.button("Predict"):
+            if symptoms_input:
+                prediction = predict_disease(symptoms_input)
+                st.write(f"Predicted Disease: {prediction}")
+            else:
+                st.write("Please enter your symptoms.")
 
     elif page == "Drug Identification":
         st.write("Upload a prescription image for drug identification.")
@@ -173,7 +218,7 @@ else:
                 image_with_boxes = preprocessed_image.copy()
                 for detection in sorted_detections:
                     x1, y1, x2, y2 = detection.xyxy[0]
-                    cv2.rectangle(image_with_boxes, (int(x1), int(y1)), (int(x2), int(x2)), (255, 0, 0), 2)      
+                    cv2.rectangle(image_with_boxes, (int(x1), int(y1)), (int(x2), int(y2)), (255, 0, 0), 2)      
                 ax1.imshow(cv2.cvtColor(image_with_boxes, cv2.COLOR_BGR2RGB))
                 ax1.set_title("Bounding Boxes")
                 ax1.axis('off')
@@ -297,8 +342,8 @@ else:
                 else:
                     formatted_date = date
 
-                st.write(f"**[{title}](https://www.who.int{link})**")
-                st.write(f"{formatted_date}")
+                st.write(f"**[{formatted_date}]({link})**")
+                st.write(f"{title}")
                 st.write("---")
             else:
                 st.write("Could not find article details.")
