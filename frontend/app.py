@@ -11,12 +11,16 @@ import io
 import os
 from inference_sdk import InferenceHTTPClient
 from bs4 import BeautifulSoup
+import tensorflow as tf
 
 st.title("Healthcare System Dashboard")
 
+# Load the disease classification model
+disease_model = tf.keras.models.load_model('C:\\Users\\SRIRAM\\Documents\\Image Classification\\FINAL_MODEL.keras')
+
 # Sidebar Navigation
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["Home", "AI Chatbot Diagnosis", "Drug Identification", "Outbreak Alert"])
+page = st.sidebar.radio("Go to", ["Home", "AI Chatbot Diagnosis", "Drug Identification", "Disease Detection", "Outbreak Alert"])
 
 # Access secrets using st.secrets
 if "INFERENCE_API_URL" not in st.secrets or "INFERENCE_API_KEY" not in st.secrets:
@@ -81,12 +85,13 @@ else:
         st.write("- **AI Chatbot Diagnosis:** Interact with an AI chatbot for preliminary diagnosis and medical information.")
         st.write("- **Drug Identification:** Upload a prescription image to identify medications and access relevant details.")
         st.write("- **Doctor's Handwriting Identification:** Our system can accurately recognize and process doctor's handwriting.")
+        st.write("- **Disease Detection:** Upload a chest X-ray image to detect potential diseases.")
         st.write("- **Outbreak Alert:** (Coming Soon) Stay informed about potential disease outbreaks in your area.")
 
         st.write("**How it Works:**")
-        st.write("1. **Upload:** You can upload a prescription image for drug identification.")
+        st.write("1. **Upload:** You can upload a prescription image for drug identification or a chest X-ray image for disease detection.")
         st.write("2. **Process:** Our AI models will analyze the image and extract relevant information.")
-        st.write("3. **Results:** You will receive identified drug names, uses, side effects, and more.")
+        st.write("3. **Results:** You will receive identified drug names, uses, side effects, and more, or a potential disease diagnosis.")
 
         st.write("**Key Features:**")
         st.write("- **AI-Powered:** Leverages advanced AI models for accurate analysis and diagnosis.")
@@ -210,6 +215,51 @@ else:
 
         else:
             st.info("Please upload a prescription image to proceed.")
+
+    elif page == "Disease Detection":
+        st.write("Upload a chest X-ray image for disease detection.")
+        uploaded_image = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+
+        if uploaded_image is not None:
+            # Display the image
+            img_opened = Image.open(uploaded_image).convert('RGB')
+            image_pred = np.array(img_opened)
+            image_pred = cv2.resize(image_pred, (150, 150))
+
+            # Convert the image to a numpy array
+            image_pred = np.array(image_pred)
+
+            # Rescale the image (if the model was trained with rescaling)
+            image_pred = image_pred / 255.0
+
+            # Add an extra dimension to match the input shape (1, 150, 150, 3)
+            image_pred = np.expand_dims(image_pred, axis=0)
+
+            # Predict using the model
+            prediction = disease_model.predict(image_pred)
+
+            # Get the predicted class
+            predicted_ = np.argmax(prediction)
+
+            # Decode the prediction
+            if predicted_ == 0:
+                predicted_class = "Covid"
+            elif predicted_ == 1:
+                predicted_class = "Normal Chest X-ray"
+            else:
+                predicted_class = "Pneumonia"
+
+            st.image(image_pred, caption='Input image by user', use_column_width=True)
+            st.write("Prediction Classes for different types:")
+            st.write("COVID: 0")
+            st.write("Normal Chest X-ray: 1")
+            st.write("Pneumonia: 2")
+            st.write("\n")
+            st.write("DETECTED DISEASE DISPLAY")
+            st.write(f"Predicted Class : {predicted_}")
+            st.write(predicted_class)
+        else:
+            st.write("Please upload an image file.")
 
     elif page == "Outbreak Alert":
         st.write("## Disease Outbreak News (from WHO)")
