@@ -364,7 +364,7 @@ else:
             title_element = article.find('a', class_='link-container')
             if title_element:
                 title = title_element.text.strip()
-                link = title_element['href']
+                link = "https://www.who.int" + title_element['href']  # Construct the full URL
 
                 date_element = article.find('span', class_='date')
                 date = date_element.text.strip() if date_element else "Date not found"
@@ -379,8 +379,8 @@ else:
                 else:
                     formatted_date = date
 
-                st.write(f"**[{formatted_date}]({link})**", unsafe_allow_html=True)
-                st.write(f"**{title}**", unsafe_allow_html=True)
+                # Use markdown to create a link that opens in a new tab
+                st.markdown(f"**[{formatted_date}]({link}) {title}**", unsafe_allow_html=True)
                 st.write("---")
             else:
                 st.write("Could not find article details.")
