@@ -1,8 +1,8 @@
 streamlit
-requests
+requests>=2.26,<2.28
 ai71
 python-dotenv
-opencv-python
+opencv-python-headless
 supervision
 matplotlib
 Pillow
