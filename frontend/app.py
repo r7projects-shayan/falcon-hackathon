@@ -58,7 +58,8 @@ if 'disease_model' not in st.session_state:
 # --- Load the vectorizer regardless of the model_llm's state ---
 if 'vectorizer' not in st.session_state:
     st.session_state.vectorizer = CountVectorizer()
-    st.session_state.vectorizer = pd.read_pickle("vectorizer.pkl")
+    vectorizer_path = os.path.join(os.path.dirname(__file__), "vectorizer.pkl")  # Updated path
+    st.session_state.vectorizer = pd.read_pickle(vectorizer_path)
 
 if 'model_llm' not in st.session_state:
     # --- Code from LLMs/LLMs_chatbot.ipynb ---
