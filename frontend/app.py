@@ -191,7 +191,7 @@ else:
         st.write("- **User-Friendly:** Simple and intuitive interface for easy navigation and interaction.")
         st.write("- **Secure:** Your data is protected and handled with confidentiality.")
 
-        st.write("**Please use the sidebar to navigate to different features.**")
+        st.write("Please use the sidebar to navigate to different features.")
 
     elif page == "AI Chatbot Diagnosis":
         st.write("Enter your symptoms separated by commas:")
@@ -370,8 +370,8 @@ else:
                 else:
                     formatted_date = date
 
-                st.write(f"**[{formatted_date}]({link})**")
-                st.write(f"{title}")
+                st.write(f"**[{formatted_date}]({link})**", unsafe_allow_html=True)
+                st.write(f"**{title}**", unsafe_allow_html=True)
                 st.write("---")
             else:
                 st.write("Could not find article details.")
