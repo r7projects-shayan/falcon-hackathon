@@ -12,3 +12,5 @@ backend/api/migrations/*
 frontend/.hc_frontend
 .aider*
 frontend/.streamlit/secrets.toml
+
+frontend/FINAL_MODEL.keras
