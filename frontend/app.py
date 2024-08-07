@@ -65,7 +65,7 @@ if 'model_llm' not in st.session_state:
     # --- Code from LLMs/LLMs_chatbot.ipynb ---
     # Load pre-trained model and vectorizer (replace with your actual file paths)
     st.session_state.model_llm = LogisticRegression()
-    st.session_state.model_llm = pd.read_pickle("LLMs/logistic_regression_model.pkl")  
+    st.session_state.model_llm = pd.read_pickle("logistic_regression_model.pkl")  
 
     # Load datasets (only for reference, not used for training)
     dataset_1 = pd.read_csv("Symptoms_Detection/training_data.csv")
