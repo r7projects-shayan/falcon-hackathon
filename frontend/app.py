@@ -59,7 +59,7 @@ if 'model_llm' not in st.session_state:
     # --- Code from LLMs/LLMs_chatbot.ipynb ---
     # Load pre-trained model and vectorizer (replace with your actual file paths)
     st.session_state.model_llm = LogisticRegression()
-    st.session_state.model_llm = pd.read_pickle("LLMs/logistic_regression_model.pkl")  # Replace with your model file
+    st.session_state.model_llm = pd.read_pickle("logistic_regression_model.pkl")  # Replace with your model file
     st.session_state.vectorizer = CountVectorizer()
     st.session_state.vectorizer = pd.read_pickle("vectorizer.pkl")  # Replace with your vectorizer file
 
