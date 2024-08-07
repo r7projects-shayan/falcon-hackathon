@@ -9,3 +9,4 @@ matplotlib
 Pillow
 inference-sdk
 tensorflow
+beautifulsoup4
