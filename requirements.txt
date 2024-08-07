@@ -9,4 +9,4 @@ beautifulsoup4
 scikit-learn
 pandas
 nltk
-bs4
+beautifulsoup4
