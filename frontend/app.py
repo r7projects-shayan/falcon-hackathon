@@ -22,6 +22,9 @@ import re
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
+# For streamlit cloud
+os.system("pip install beautifulsoup4")
+
 # Download NLTK data (only needs to be done once)
 nltk.download('punkt')
 nltk.download('stopwords')
