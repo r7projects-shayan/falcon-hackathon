@@ -1,7 +1,0 @@
-opencv-python
-opencv-python-headless
-opencv-contrib-python
-pillow
-tensorflow
-scikit-learn
-streamlit
