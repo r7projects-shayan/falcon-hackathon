@@ -57,35 +57,25 @@ if 'disease_model' not in st.session_state:
 
 if 'model_llm' not in st.session_state:
     # --- Code from LLMs/LLMs_chatbot.ipynb ---
-    
+    # Load pre-trained model and vectorizer (replace with your actual file paths)
+    st.session_state.model_llm = LogisticRegression()
+    st.session_state.model_llm = pd.read_pickle("llm_model.pkl")  # Replace with your model file
+    st.session_state.vectorizer = CountVectorizer()
+    st.session_state.vectorizer = pd.read_pickle("vectorizer.pkl")  # Replace with your vectorizer file
 
-    # Load datasets
+    # Load datasets (only for reference, not used for training)
     dataset_1 = pd.read_csv("Symptoms_Detection/training_data.csv")
     dataset_2 = pd.read_csv("Symptoms_Detection/Symptom2Disease.csv")
 
-    # Create symptoms_text column
+    # Create symptoms_text column (only for reference, not used for training)
     dataset_1['symptoms_text'] = dataset_1.apply(lambda row: ','.join([col for col in dataset_1.columns if row[col] == 1]), axis=1)
     final_dataset = pd.DataFrame(dataset_1[["prognosis", "symptoms_text"]])
     final_dataset.columns = ['label', 'text']
 
-    # Combine datasets
+    # Combine datasets (only for reference, not used for training)
     df_combined = pd.concat([final_dataset, dataset_2[['label', 'text']]], axis=0, ignore_index=True)
 
-    # Preprocess text data
-    df_combined["cleaned_text"] = df_combined["text"].apply(preprocess_text)
-
-    # Split data and train model
-    X = df_combined['cleaned_text']
-    y = df_combined['label']
-    vectorizer = CountVectorizer()
-    X_vectorized = vectorizer.fit_transform(X)
-    X_train, X_test, y_train, y_test = train_test_split(X_vectorized, y, test_size=0.2, random_state=42)
-    model_llm = LogisticRegression()
-    model_llm.fit(X_train, y_train)
-
-    # Store in session state
-    st.session_state.model_llm = model_llm
-    st.session_state.vectorizer = vectorizer
+    # Store in session state (only for reference, not used for training)
     st.session_state.df_combined = df_combined
 # --- End of Session State Initialization ---
 
