@@ -379,9 +379,8 @@ else:
                 else:
                     formatted_date = date
 
-                # Display the date normally and the title as a link that opens in a new tab
-                st.write(f"{formatted_date}: ", unsafe_allow_html=True)
-                st.write(f'<a href="{link}" target="_blank"><strong>{title}</strong></a>', unsafe_allow_html=True)
+                # Display the date and the title as a link that opens in a new tab
+                st.write(f'<a href="{link}" target="_blank"><strong>{formatted_date}: {title}</strong></a>', unsafe_allow_html=True)
                 st.write("---")
             else:
                 st.write("Could not find article details.")
