@@ -55,13 +55,16 @@ if 'disease_model' not in st.session_state:
         st.error("Disease classification model not found. Please ensure 'FINAL_MODEL.keras' is in the same directory as this app.")
         st.session_state.disease_model = None
 
+# --- Load the vectorizer regardless of the model_llm's state ---
+if 'vectorizer' not in st.session_state:
+    st.session_state.vectorizer = CountVectorizer()
+    st.session_state.vectorizer = pd.read_pickle("vectorizer.pkl")
+
 if 'model_llm' not in st.session_state:
     # --- Code from LLMs/LLMs_chatbot.ipynb ---
     # Load pre-trained model and vectorizer (replace with your actual file paths)
     st.session_state.model_llm = LogisticRegression()
     st.session_state.model_llm = pd.read_pickle("LLMs/logistic_regression_model.pkl")  
-    st.session_state.vectorizer = CountVectorizer()
-    st.session_state.vectorizer = pd.read_pickle("vectorizer.pkl")  
 
     # Load datasets (only for reference, not used for training)
     dataset_1 = pd.read_csv("Symptoms_Detection/training_data.csv")
