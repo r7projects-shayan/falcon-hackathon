@@ -8,3 +8,4 @@ matplotlib
 Pillow
 inference-sdk
 tensorflow
+scikit-learn
