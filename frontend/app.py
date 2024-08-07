@@ -16,7 +16,11 @@ import tensorflow as tf
 st.title("Healthcare System Dashboard")
 
 # Load the disease classification model
-disease_model = tf.keras.models.load_model('C:\\Users\\SRIRAM\\Documents\\Image Classification\\FINAL_MODEL.keras')
+try:
+    disease_model = tf.keras.models.load_model('FINAL_MODEL.keras')
+except FileNotFoundError:
+    st.error("Disease classification model not found. Please ensure 'FINAL_MODEL.keras' is in the same directory as this app.")
+    disease_model = None
 
 # Sidebar Navigation
 st.sidebar.title("Navigation")
@@ -220,7 +224,7 @@ else:
         st.write("Upload a chest X-ray image for disease detection.")
         uploaded_image = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
-        if uploaded_image is not None:
+        if uploaded_image is not None and disease_model is not None:
             # Display the image
             img_opened = Image.open(uploaded_image).convert('RGB')
             image_pred = np.array(img_opened)
@@ -259,7 +263,7 @@ else:
             st.write(f"Predicted Class : {predicted_}")
             st.write(predicted_class)
         else:
-            st.write("Please upload an image file.")
+            st.write("Please upload an image file or ensure the disease model is loaded.")
 
     elif page == "Outbreak Alert":
         st.write("## Disease Outbreak News (from WHO)")
