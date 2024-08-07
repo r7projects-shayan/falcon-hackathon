@@ -45,7 +45,7 @@ def preprocess_text(text):
 
     return cleaned_text
 
-st.title("Mediscape Dashboard")
+st.title("Medi Scape Dashboard")
 
 # --- Session State Initialization ---
 if 'disease_model' not in st.session_state:
