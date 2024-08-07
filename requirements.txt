@@ -1,6 +1,6 @@
 tensorflow
 streamlit
-opencv-python
+opencv-python-headless
 supervision
 matplotlib
 Pillow
