@@ -27,9 +27,7 @@ nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
-st.title("Healthcare System Dashboard")
-
-# --- Function to preprocess text ---
+# --- Preprocess text function (moved outside session state) ---
 def preprocess_text(text):
     # Convert to lowercase
     text = text.lower()
@@ -47,6 +45,8 @@ def preprocess_text(text):
 
     return cleaned_text
 
+st.title("Healthcare System Dashboard")
+
 # --- Session State Initialization ---
 if 'disease_model' not in st.session_state:
     try:
@@ -57,33 +57,25 @@ if 'disease_model' not in st.session_state:
 
 if 'model_llm' not in st.session_state:
     # --- Code from LLMs/LLMs_chatbot.ipynb ---
-    # Load datasets
+    # Load pre-trained model and vectorizer (replace with your actual file paths)
+    st.session_state.model_llm = LogisticRegression()
+    st.session_state.model_llm = pd.read_pickle("LLMs/logistic_regression_model.pkl")  # Replace with your model file
+    st.session_state.vectorizer = CountVectorizer()
+    st.session_state.vectorizer = pd.read_pickle("vectorizer.pkl")  # Replace with your vectorizer file
+
+    # Load datasets (only for reference, not used for training)
     dataset_1 = pd.read_csv("Symptoms_Detection/training_data.csv")
     dataset_2 = pd.read_csv("Symptoms_Detection/Symptom2Disease.csv")
 
-    # Create symptoms_text column
+    # Create symptoms_text column (only for reference, not used for training)
     dataset_1['symptoms_text'] = dataset_1.apply(lambda row: ','.join([col for col in dataset_1.columns if row[col] == 1]), axis=1)
     final_dataset = pd.DataFrame(dataset_1[["prognosis", "symptoms_text"]])
     final_dataset.columns = ['label', 'text']
 
-    # Combine datasets
+    # Combine datasets (only for reference, not used for training)
     df_combined = pd.concat([final_dataset, dataset_2[['label', 'text']]], axis=0, ignore_index=True)
 
-    # Preprocess text data
-    df_combined["cleaned_text"] = df_combined["text"].apply(preprocess_text)
-
-    # Split data and train model
-    X = df_combined['cleaned_text']
-    y = df_combined['label']
-    vectorizer = CountVectorizer()
-    X_vectorized = vectorizer.fit_transform(X)
-    X_train, X_test, y_train, y_test = train_test_split(X_vectorized, y, test_size=0.2, random_state=42)
-    model_llm = LogisticRegression()
-    model_llm.fit(X_train, y_train)
-
-    # Store in session state
-    st.session_state.model_llm = model_llm
-    st.session_state.vectorizer = vectorizer
+    # Store in session state (only for reference, not used for training)
     st.session_state.df_combined = df_combined
 # --- End of Session State Initialization ---
 
@@ -189,12 +181,25 @@ else:
         st.write("- **User-Friendly:** Simple and intuitive interface for easy navigation and interaction.")
         st.write("- **Secure:** Your data is protected and handled with confidentiality.")
 
-        st.write("**Please use the sidebar to navigate to different features.**")
+        st.write("Please use the sidebar to navigate to different features.")
 
     elif page == "AI Chatbot Diagnosis":
         st.write("Enter your symptoms separated by commas:")
         symptoms_input = st.text_area("Symptoms:")
-        if st.button("Predict"):
+        if st.button("Diagnose with LLM"):
+            if symptoms_input:
+                # Construct the prompt for the LLM
+                prompt = f"""Diagnose the most likely disease based on the following symptoms: {symptoms_input}
+                Provide a list of possible diseases and their likelihood, along with a brief explanation for each."""
+                # Get the LLM response
+                llm_response = get_ai71_response(prompt)
+                st.write("## LLM Diagnosis:")
+                st.write(llm_response)
+            else:
+                st.write("Please enter your symptoms.")
+
+        # --- Existing Logistic Regression model ---
+        if st.button("Predict with Logistic Regression"):
             if symptoms_input:
                 prediction = predict_disease(symptoms_input)
                 st.write(f"Predicted Disease: {prediction}")
@@ -368,8 +373,8 @@ else:
                 else:
                     formatted_date = date
 
-                st.write(f"**[{formatted_date}]({link})**")
-                st.write(f"{title}")
+                st.write(f"**[{formatted_date}]({link})**", unsafe_allow_html=True)
+                st.write(f"**{title}**", unsafe_allow_html=True)
                 st.write("---")
             else:
                 st.write("Could not find article details.")
