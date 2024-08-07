@@ -57,10 +57,13 @@ if 'disease_model' not in st.session_state:
 
 # --- Load the vectorizer regardless of the model_llm's state ---
 if 'vectorizer' not in st.session_state:
-    st.session_state.vectorizer = CountVectorizer()
-    # Use a relative path assuming vectorizer.pkl is in the same directory
-    vectorizer_path = "vectorizer.pkl" 
-    st.session_state.vectorizer = pd.read_pickle(vectorizer_path)
+    try:
+        # Use a relative path assuming vectorizer.pkl is in the same directory
+        vectorizer_path = "vectorizer.pkl" 
+        st.session_state.vectorizer = pd.read_pickle(vectorizer_path)
+    except FileNotFoundError:
+        st.error("Vectorizer file not found. Please ensure 'vectorizer.pkl' is in the same directory as this app.")
+        st.session_state.vectorizer = None
 
    
 
@@ -68,7 +71,11 @@ if 'model_llm' not in st.session_state:
     # --- Code from LLMs/LLMs_chatbot.ipynb ---
     # Load pre-trained model and vectorizer (replace with your actual file paths)
     st.session_state.model_llm = LogisticRegression()
-    st.session_state.model_llm = pd.read_pickle("logistic_regression_model.pkl")  
+    try:
+        st.session_state.model_llm = pd.read_pickle("logistic_regression_model.pkl")  
+    except FileNotFoundError:
+        st.error("LLM model file not found. Please ensure 'logistic_regression_model.pkl' is in the same directory.")
+        st.session_state.model_llm = None
 
     # Load datasets (only for reference, not used for training)
     dataset_1 = pd.read_csv("Symptoms_Detection/training_data.csv")
@@ -213,10 +220,14 @@ else:
 
     # --- Prediction function (using session state) ---
     def predict_disease(symptoms):
-        preprocessed_symptoms = preprocess_text(symptoms)
-        symptoms_vectorized = st.session_state.vectorizer.transform([preprocessed_symptoms])
-        prediction = st.session_state.model_llm.predict(symptoms_vectorized)
-        return prediction[0]
+        if st.session_state.vectorizer is not None and st.session_state.model_llm is not None:
+            preprocessed_symptoms = preprocess_text(symptoms)
+            symptoms_vectorized = st.session_state.vectorizer.transform([preprocessed_symptoms])
+            prediction = st.session_state.model_llm.predict(symptoms_vectorized)
+            return prediction[0]
+        else:
+            st.error("Unable to make prediction. Vectorizer or LLM model is not loaded.")
+            return None
 
     # --- New function to analyze X-ray with LLM ---
     def analyze_xray_with_llm(predicted_class):
@@ -279,20 +290,21 @@ else:
                 # 2. Regression Prediction
                 regression_prediction = predict_disease(symptoms_input)
 
-                # 3. LLM Prompt Enhancement
-                prompt = f"""The predicted condition based on a symptom analysis is {regression_prediction}. 
-                Provide a detailed explanation of this condition, including possible causes, common symptoms, 
-                and general treatment approaches. Also, suggest when a patient should consult a doctor."""
+                if regression_prediction is not None:
+                    # 3. LLM Prompt Enhancement
+                    prompt = f"""The predicted condition based on a symptom analysis is {regression_prediction}. 
+                    Provide a detailed explanation of this condition, including possible causes, common symptoms, 
+                    and general treatment approaches. Also, suggest when a patient should consult a doctor."""
 
-                # 4. LLM Output
-                llm_response = get_ai71_response(prompt)
+                    # 4. LLM Output
+                    llm_response = get_ai71_response(prompt)
 
-                # 5. Combined Output
-                st.write("## Logistic Regression Prediction:")
-                st.write(regression_prediction)
+                    # 5. Combined Output
+                    st.write("## Logistic Regression Prediction:")
+                    st.write(regression_prediction)
 
-                st.write("## LLM Explanation:")
-                st.write(llm_response)
+                    st.write("## LLM Explanation:")
+                    st.write(llm_response)
                 # --- End of Pipeline 1 Implementation ---
 
             else:
