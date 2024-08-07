@@ -27,6 +27,24 @@ nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
+# --- Preprocess text function (moved outside session state) ---
+def preprocess_text(text):
+    # Convert to lowercase
+    text = text.lower()
+
+    cleaned_text = re.sub(r'[^a-zA-Z0-9\s\,]', ' ', text)
+    # Tokenize text
+    tokens = word_tokenize(cleaned_text)
+
+    # Remove stop words
+    stop_words = set(stopwords.words('english'))
+    tokens = [word for word in tokens if word not in stop_words]
+
+    # Rejoin tokens into a single string
+    cleaned_text = ' '.join(tokens)
+
+    return cleaned_text
+
 st.title("Healthcare System Dashboard")
 
 # --- Session State Initialization ---
@@ -39,22 +57,7 @@ if 'disease_model' not in st.session_state:
 
 if 'model_llm' not in st.session_state:
     # --- Code from LLMs/LLMs_chatbot.ipynb ---
-    def preprocess_text(text):
-        # Convert to lowercase
-        text = text.lower()
-
-        cleaned_text = re.sub(r'[^a-zA-Z0-9\s\,]', ' ', text)
-        # Tokenize text
-        tokens = word_tokenize(cleaned_text)
-
-        # Remove stop words
-        stop_words = set(stopwords.words('english'))
-        tokens = [word for word in tokens if word not in stop_words]
-
-        # Rejoin tokens into a single string
-        cleaned_text = ' '.join(tokens)
-
-        return cleaned_text
+    
 
     # Load datasets
     dataset_1 = pd.read_csv("Symptoms_Detection/training_data.csv")
