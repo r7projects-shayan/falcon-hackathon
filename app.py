@@ -29,6 +29,24 @@ nltk.download('wordnet')
 
 st.title("Healthcare System Dashboard")
 
+# --- Function to preprocess text ---
+def preprocess_text(text):
+    # Convert to lowercase
+    text = text.lower()
+
+    cleaned_text = re.sub(r'[^a-zA-Z0-9\s\,]', ' ', text)
+    # Tokenize text
+    tokens = word_tokenize(cleaned_text)
+
+    # Remove stop words
+    stop_words = set(stopwords.words('english'))
+    tokens = [word for word in tokens if word not in stop_words]
+
+    # Rejoin tokens into a single string
+    cleaned_text = ' '.join(tokens)
+
+    return cleaned_text
+
 # --- Session State Initialization ---
 if 'disease_model' not in st.session_state:
     try:
@@ -39,23 +57,6 @@ if 'disease_model' not in st.session_state:
 
 if 'model_llm' not in st.session_state:
     # --- Code from LLMs/LLMs_chatbot.ipynb ---
-    def preprocess_text(text):
-        # Convert to lowercase
-        text = text.lower()
-
-        cleaned_text = re.sub(r'[^a-zA-Z0-9\s\,]', ' ', text)
-        # Tokenize text
-        tokens = word_tokenize(cleaned_text)
-
-        # Remove stop words
-        stop_words = set(stopwords.words('english'))
-        tokens = [word for word in tokens if word not in stop_words]
-
-        # Rejoin tokens into a single string
-        cleaned_text = ' '.join(tokens)
-
-        return cleaned_text
-
     # Load datasets
     dataset_1 = pd.read_csv("Symptoms_Detection/training_data.csv")
     dataset_2 = pd.read_csv("Symptoms_Detection/Symptom2Disease.csv")
@@ -352,7 +353,7 @@ else:
             title_element = article.find('a', class_='link-container')
             if title_element:
                 title = title_element.text.strip()
-                link = f"https://www.who.int{title_element['href']}" # Create full link
+                link = title_element['href']
 
                 date_element = article.find('span', class_='date')
                 date = date_element.text.strip() if date_element else "Date not found"
@@ -367,8 +368,8 @@ else:
                 else:
                     formatted_date = date
 
-                # Use markdown to create a link that opens in a new tab
-                st.write(f"**[{title}]({link})**  {formatted_date}")
+                st.write(f"**[{formatted_date}]({link})**")
+                st.write(f"{title}")
                 st.write("---")
             else:
                 st.write("Could not find article details.")
