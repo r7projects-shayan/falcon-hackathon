@@ -2,7 +2,7 @@
 
 ## Foundation
 - [x] Set up Streamlit frontend
-- [x] Configure Django backend
+- [ ] Configure Django backend
 - [x] Integrate AI71 API (Falcon LLM)
 
 ## Core Features
@@ -18,4 +18,5 @@
 - [ ] Implement Resource Management System
 
 ## Public Health & Analytics
-- [ ] Develop
+- [x] Develop Outbreak Alert Feature
+- [ ] Implement Data Visualization Dashboard
