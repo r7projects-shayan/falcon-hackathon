@@ -55,6 +55,12 @@ if 'disease_model' not in st.session_state:
         st.error("Disease classification model not found. Please ensure 'FINAL_MODEL.keras' is in the same directory as this app.")
         st.session_state.disease_model = None
 
+
+if 'vectorizer' not in st.session_state:
+    st.session_state.vectorizer = CountVectorizer()
+    vectorizer_path = os.path.join(os.path.dirname(__file__), "vectorizer.pkl")  # Updated path
+    st.session_state.vectorizer = pd.read_pickle(vectorizer_path)
+
 # --- Load the vectorizer regardless of the model_llm's state ---
 if 'vectorizer' not in st.session_state:
     st.session_state.vectorizer = CountVectorizer()
