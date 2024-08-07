@@ -11,3 +11,4 @@ inference-sdk
 tensorflow
 beautifulsoup4
 scikit-learn
+nltk
