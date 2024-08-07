@@ -18,9 +18,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
 import nltk
-import re  # Import the 're' module for regular expressions
-from nltk.tokenize import word_tokenize  # Import word_tokenize
-from nltk.corpus import stopwords  # Import stopwords
+import re
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
 
 # Download NLTK data (only needs to be done once)
 nltk.download('punkt')
@@ -45,7 +45,7 @@ def preprocess_text(text):
 
     return cleaned_text
 
-st.title("Healthcare System Dashboard")
+st.title("Mediscape Dashboard")
 
 # --- Session State Initialization ---
 if 'disease_model' not in st.session_state:
@@ -163,25 +163,40 @@ else:
         st.write(llm_response)
 
     if page == "Home":
-        st.write("Welcome to the Healthcare System Dashboard!")
+        st.markdown("## Project Overview")
+        st.write("This healthcare application allows users to upload prescription images, which are then processed to extract and analyze the text. The key components include image processing, text recognition, and context understanding using machine learning models.")
+
+        st.markdown("## Features")
         st.write("This application provides various AI-powered tools for remote healthcare, including:")
-        st.write("- **AI Chatbot Diagnosis:** Interact with an AI chatbot for preliminary diagnosis and medical information.")
-        st.write("- **Drug Identification:** Upload a prescription image to identify medications and access relevant details.")
-        st.write("- **Doctor's Handwriting Identification:** Our system can accurately recognize and process doctor's handwriting.")
-        st.write("- **Disease Detection:** Upload a chest X-ray image to detect potential diseases.")
-        st.write("- **Outbreak Alert:** (Coming Soon) Stay informed about potential disease outbreaks in your area.")
+        features = [
+            "**AI Chatbot Diagnosis:** Interact with an AI chatbot for preliminary diagnosis and medical information.",
+            "**Drug Identification:** Upload a prescription image to identify medications and access relevant details.",
+            "**Doctor's Handwriting Identification:** Our system can accurately recognize and process doctor's handwriting.",
+            "**Disease Detection:** Upload a chest X-ray image to detect potential diseases.",
+            "**Outbreak Alert:** Stay informed about potential disease outbreaks in your area."
+        ]
+        for feature in features:
+            st.markdown(f"- {feature}")
 
-        st.write("**How it Works:**")
-        st.write("1. **Upload:** You can upload a prescription image for drug identification or a chest X-ray image for disease detection.")
-        st.write("2. **Process:** Our AI models will analyze the image and extract relevant information.")
-        st.write("3. **Results:** You will receive identified drug names, uses, side effects, and more, or a potential disease diagnosis.")
+        st.markdown("## How it Works")
+        steps = [
+            "**Upload:** You can upload a prescription image for drug identification or a chest X-ray image for disease detection.",
+            "**Process:** Our AI models will analyze the image and extract relevant information.",
+            "**Results:** You will receive identified drug names, uses, side effects, and more, or a potential disease diagnosis."
+        ]
+        for i, step in enumerate(steps, 1):
+            st.markdown(f"{i}. {step}")
 
-        st.write("**Key Features:**")
-        st.write("- **AI-Powered:** Leverages advanced AI models for accurate analysis and diagnosis.")
-        st.write("- **User-Friendly:** Simple and intuitive interface for easy navigation and interaction.")
-        st.write("- **Secure:** Your data is protected and handled with confidentiality.")
+        st.markdown("## Key Features")
+        key_features = [
+            "**AI-Powered:** Leverages advanced AI models for accurate analysis and diagnosis.",
+            "**User-Friendly:** Simple and intuitive interface for easy navigation and interaction.",
+            "**Secure:** Your data is protected and handled with confidentiality."
+        ]
+        for feature in key_features:
+            st.markdown(f"- {feature}")
 
-        st.write("Please use the sidebar to navigate to different features.")
+        st.markdown("Please use the sidebar to navigate to different features.")
 
     elif page == "AI Chatbot Diagnosis":
         st.write("Enter your symptoms separated by commas:")
@@ -348,7 +363,7 @@ else:
             st.write("Please upload an image file or ensure the disease model is loaded.")
 
     elif page == "Outbreak Alert":
-        st.write("## Disease Outbreak News (from WHO)")
+        st.markdown("## **Disease Outbreak News (from WHO)**")
 
         # Fetch WHO news page
         url = "https://www.who.int/news-room/events"
@@ -360,16 +375,15 @@ else:
         # Find news articles (adjust selectors if WHO website changes)
         articles = soup.find_all('div', class_='list-view--item')
 
-        for article in articles[:5]: # Display the top 5 news articles
+        for article in articles[:5]:  # Display the top 5 news articles
             title_element = article.find('a', class_='link-container')
             if title_element:
                 title = title_element.text.strip()
                 link = title_element['href']
-
                 date_element = article.find('span', class_='date')
                 date = date_element.text.strip() if date_element else "Date not found"
-
-                # Extract date information and format it
+                
+                # Format date
                 date_parts = date.split()
                 if len(date_parts) >= 3:
                     try:
@@ -378,10 +392,12 @@ else:
                         formatted_date = date  # Keep the original date if formatting fails
                 else:
                     formatted_date = date
-
-                # Display the date and the title as a link that opens in a new tab
-                st.write(f'<a href="{link}" target="_blank"><strong>{formatted_date}: {title}</strong></a>', unsafe_allow_html=True)
-                st.write("---")
+                
+                # Display news item in a card-like container
+                with st.container():
+                    st.markdown(f"**{formatted_date}**")
+                    st.markdown(f"[{title}]({link})")
+                    st.markdown("---")
             else:
                 st.write("Could not find article details.")
 
