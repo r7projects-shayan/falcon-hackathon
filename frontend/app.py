@@ -186,23 +186,29 @@ else:
     elif page == "AI Chatbot Diagnosis":
         st.write("Enter your symptoms separated by commas:")
         symptoms_input = st.text_area("Symptoms:")
-        if st.button("Diagnose with LLM"):
+        if st.button("Diagnose"):
             if symptoms_input:
-                # Construct the prompt for the LLM
-                prompt = f"""Diagnose the most likely disease based on the following symptoms: {symptoms_input}
-                Provide a list of possible diseases and their likelihood, along with a brief explanation for each."""
-                # Get the LLM response
-                llm_response = get_ai71_response(prompt)
-                st.write("## LLM Diagnosis:")
-                st.write(llm_response)
-            else:
-                st.write("Please enter your symptoms.")
+                # --- Pipeline 1 Implementation ---
+                # 1. Symptom Input (already done with st.text_area)
+                # 2. Regression Prediction
+                regression_prediction = predict_disease(symptoms_input)
 
-        # --- Existing Logistic Regression model ---
-        if st.button("Predict with Logistic Regression"):
-            if symptoms_input:
-                prediction = predict_disease(symptoms_input)
-                st.write(f"Predicted Disease: {prediction}")
+                # 3. LLM Prompt Enhancement
+                prompt = f"""The predicted condition based on a symptom analysis is {regression_prediction}. 
+                Provide a detailed explanation of this condition, including possible causes, common symptoms, 
+                and general treatment approaches. Also, suggest when a patient should consult a doctor."""
+
+                # 4. LLM Output
+                llm_response = get_ai71_response(prompt)
+
+                # 5. Combined Output
+                st.write("## Logistic Regression Prediction:")
+                st.write(regression_prediction)
+
+                st.write("## LLM Explanation:")
+                st.write(llm_response)
+                # --- End of Pipeline 1 Implementation ---
+
             else:
                 st.write("Please enter your symptoms.")
 
