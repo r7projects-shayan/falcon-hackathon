@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import io
 import os
 from inference_sdk import InferenceHTTPClient
+from bs4 import BeautifulSoup
 
 st.title("Healthcare System Dashboard")
 
@@ -211,8 +212,26 @@ else:
             st.info("Please upload a prescription image to proceed.")
 
     elif page == "Outbreak Alert":
-        st.write("This is the Outbreak Alert page.")
-        # Add content for Outbreak Alert page
+        st.write("## Disease Outbreak News (from WHO)")
+
+        # Fetch WHO news page
+        url = "https://www.who.int/news-room/events"
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for bad status codes
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        # Find news articles (adjust selectors if WHO website changes)
+        articles = soup.find_all('div', class_='list-view--item')
+
+        for article in articles[:5]: # Display the top 5 news articles
+            title = article.find('h3', class_='heading').text.strip()
+            link = article.find('a')['href']
+            date = article.find('span', class_='date').text.strip()
+
+            st.write(f"**[{title}](https://www.who.int{link})**")
+            st.write(f"{date}")
+            st.write("---")
 
 # Auto-scroll to the bottom of the chat container
 st.markdown(
