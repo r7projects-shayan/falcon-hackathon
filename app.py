@@ -332,8 +332,18 @@ else:
                 date_element = article.find('span', class_='date')
                 date = date_element.text.strip() if date_element else "Date not found"
 
+                # Extract date information and format it
+                date_parts = date.split()
+                if len(date_parts) >= 3:
+                    try:
+                        formatted_date = datetime.strptime(date, "%d %B %Y").strftime("%Y-%m-%d")
+                    except ValueError:
+                        formatted_date = date  # Keep the original date if formatting fails
+                else:
+                    formatted_date = date
+
                 st.write(f"**[{title}](https://www.who.int{link})**")
-                st.write(f"{date}")
+                st.write(f"{formatted_date}")
                 st.write("---")
             else:
                 st.write("Could not find article details.")
