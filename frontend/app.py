@@ -82,9 +82,73 @@ if 'model_llm' not in st.session_state:
     st.session_state.df_combined = df_combined
 # --- End of Session State Initialization ---
 
+# Load the disease classification model
+try:
+    disease_model = tf.keras.models.load_model('FINAL_MODEL.keras')
+except FileNotFoundError:
+    st.error("Disease classification model not found. Please ensure 'FINAL_MODEL.keras' is in the same directory as this app.")
+    disease_model = None
+
 # Sidebar Navigation
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", ["Home", "AI Chatbot Diagnosis", "Drug Identification", "Disease Detection", "Outbreak Alert"])
+
+# Access secrets using st.secrets
+if "INFERENCE_API_URL" not in st.secrets or "INFERENCE_API_KEY" not in st.secrets:
+    st.error("Please make sure to set your secrets in the Streamlit secrets settings.")
+else:
+    # Initialize the Inference Client
+    CLIENT = InferenceHTTPClient(
+        api_url=st.secrets["INFERENCE_API_URL"],
+        api_key=st.secrets["INFERENCE_API_KEY"]
+    )
+
+    # Function to preprocess the image
+    def preprocess_image(image_path):
+        # Load the image
+        image = cv2.imread(image_path)
+
+        # Convert to grayscale
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        # Remove noise
+        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+
+        # Thresholding/Binarization
+        _, binary = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+        # Dilation and Erosion
+        kernel = np.ones((1, 1), np.uint8)
+        dilated = cv2.dilate(binary, kernel, iterations=1)
+        eroded = cv2.erode(dilated, kernel, iterations=1)
+
+        # Edge detection
+        edges = cv2.Canny(eroded, 100, 200)
+
+        # Deskewing
+        coords = np.column_stack(np.where(edges > 0))
+        angle = cv2.minAreaRect(coords)[-1]
+        if angle < -45:
+            angle = -(90 + angle)
+        else:
+            angle = -angle
+
+        (h, w) = edges.shape[:2]
+        center = (w // 2, h // 2)
+        M = cv2.getRotationMatrix2D(center, angle, 1.0)
+        deskewed = cv2.warpAffine(edges, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+
+        # Find contours
+        contours, _ = cv2.findContours(deskewed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        # Draw contours on the original image
+        contour_image = image.copy()
+        cv2.drawContours(contour_image, contours, -1, (0, 255, 0), 2)
+
+        return contour_image
+
+    def get_x1(detection):
+        return detection.xyxy[0][0]
 
 # Access secrets using st.secrets
 if "INFERENCE_API_URL" not in st.secrets or "INFERENCE_API_KEY" not in st.secrets:
