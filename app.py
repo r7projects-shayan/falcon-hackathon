@@ -18,6 +18,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
 import nltk
+import re  # Import the 're' module for regular expressions
+from nltk.tokenize import word_tokenize  # Import word_tokenize
+from nltk.corpus import stopwords  # Import stopwords
 
 # Download NLTK data (only needs to be done once)
 nltk.download('punkt')
