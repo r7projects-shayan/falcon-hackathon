@@ -22,9 +22,6 @@ import re
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
-# For streamlit cloud
-os.system("pip install beautifulsoup4")
-
 # Download NLTK data (only needs to be done once)
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -60,9 +57,8 @@ if 'disease_model' not in st.session_state:
 
 # --- Load the vectorizer regardless of the model_llm's state ---
 if 'vectorizer' not in st.session_state:
-    st.session_state.vectorizer = CountVectorizer()
     # Use a relative path assuming vectorizer.pkl is in the same directory
-    vectorizer_path = "vectorizer.pkl" 
+    vectorizer_path = "Symptoms_Detection/vectorizer.pkl" 
     st.session_state.vectorizer = pd.read_pickle(vectorizer_path)
 
 if 'model_llm' not in st.session_state:
